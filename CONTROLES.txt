@@ -1,0 +1,20 @@
+CONTRÔLES DE LIVRAISON — 8 novembre 2026
+
+Code : vérification syntaxique JavaScript avec Node.
+Parcours complet : 20 critères validés, 1000/1000, pas de points en double.
+Parcours partiel : erreurs, aides et quatre niveaux de résultats contrôlés.
+Bilan : export JSON, champs longs, autocontrôle Writer et remise à zéro testés.
+Reprise : sérialisation/restauration de l'état et des formulaires contrôlée.
+Confidentialité : sans choix de sauvegarde, aucune écriture demandée au stockage.
+Affichage : parcours contrôlé de 390 à 1920 pixels, sans débordement horizontal global.
+Impression : bilans vierge, partiel, complet et champs longs, une page A4 chacun.
+Documents : brouillon ODT rendu en deux pages ; modèle corrigé ODT/PDF en une page.
+Les rendus des documents et du bilan ont été inspectés visuellement.
+
+Environnement : Chromium local piloté par Playwright. Les politiques du navigateur
+interdisent les URL locales : la page et ses ressources ont été injectées pour les
+tests. Le stockage local est simulé pendant ces tests. La livraison conserve les
+chemins relatifs normaux et le vrai localStorage avec gestion d'erreur.
+Firefox n'est pas disponible dans cet environnement ; son rendu n'a pas été testé.
+Aucune impression matérielle ni écriture sur un lecteur P: réel n'a été effectuée.
+La correction du fichier de l'élève dans Writer n'est jamais automatisée.
