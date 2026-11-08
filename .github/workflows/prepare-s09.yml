@@ -1,0 +1,46 @@
+name: Préparer la séance 9
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.build/READY']
+permissions:
+  contents: write
+concurrency:
+  group: prepare-s09-main
+  cancel-in-progress: false
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Restaurer les 13 fichiers et vérifier leurs empreintes
+        run: python .build/prepare.py
+      - name: Vérifier la syntaxe JavaScript
+        run: node --check script.js
+      - name: Vérifier les fichiers Writer et PDF
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          for path in ('ressources/document_a_corriger.odt', 'enseignant/modele_corrige.odt'):
+              with ZipFile(path) as z:
+                  assert z.testzip() is None, path
+                  assert z.read('mimetype') == b'application/vnd.oasis.opendocument.text', path
+          pdf = Path('ressources/modele_corrige.pdf').read_bytes()
+          assert pdf.startswith(b'%PDF-') and b'%%EOF' in pdf[-100:]
+          print('Documents Writer et PDF présents et conformes au contrôle de transfert.')
+          PY
+      - name: Publier les fichiers utilisables et le ZIP
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html style.css script.js assets ressources enseignant README.txt CONTROLES.txt .nojekyll SHA256SUMS.txt S09_Document_pret_a_rendre.zip
+          if ! git diff --cached --quiet; then
+            git commit -m 'Publier S09 : site, documents Writer, PDF modèle et archive vérifiée'
+            git push origin HEAD:main
+          fi
